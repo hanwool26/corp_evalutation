@@ -1,21 +1,25 @@
 import dart_fss as dart
 
-def api_open():
-    f = open('api_key.txt')
-    api_key = f.readline()
-    return api_key
+class Corp_evaluation():
+    def __init__(self):
+        print('Class 생성')
+        with open('api_key.txt') as f:
+            self.api_key = f.readline()
 
-def get_corp_info(crp_list, corp_title="삼성전자"):
-    return crp_list.find_by_corp_name(corp_title, exactly=True)
+    def load_dart(self):
+        dart.set_api_key(self.api_key)
+        self.crp_list = dart.get_corp_list()
+
+    def get_corp_info(self, corp_title):
+        return self.crp_list.find_by_corp_name(corp_title, exactly=True)
 
 if __name__ == '__main__':
-    api_key = api_open()  # API KEY read 하여 string 할당
-    dart.set_api_key(api_key=api_key)
+    corp = Corp_evaluation()
+    corp.load_dart()
 
-    crp_list = dart.get_corp_list()  # Loading corp list
-    print("기업명 :", end=' ')
     corp_title = input()
-    corp_info = get_corp_info(crp_list, corp_title)
+    corp_info = corp.get_corp_info(corp_title)
+
     if corp_info == None:
         print(f'기업 없음{corp_title}')
     else:
